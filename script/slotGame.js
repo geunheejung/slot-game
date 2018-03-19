@@ -58,27 +58,25 @@ const slotGame = (() => {
 
       switch (userLank + 1) {
         case 1:
-          userSlotMoney += gameMoney * 4;
-          break;
+          return gameMoney * 4;
         case 2:
-          userSlotMoney += gameMoney * 3;
-          break;
+          return gameMoney * 3;
         case 3:
-          userSlotMoney += gameMoney * 2;
-          break;
+          return gameMoney * 2;
         case 4:
-          userSlotMoney += gameMoney * 1;
-          break;
+          return gameMoney * 1;
+        default:
+          return 0;
       }
-      render();
-      clear();
     }
   })();
 
   const setSlotSymbol = () => {
     const symbolList = ['별', '종', '체리', '초밥', '샵', '바나나'];
     resultSymbol = slotSymbol(symbolList);
-    changeGameMoney();
+    userSlotMoney += changeGameMoney();
+    render();
+    clear();
   };
 
   const init = (money) => {
@@ -113,7 +111,6 @@ const con = (() => {
       console.clear();
     },
     render: (resultSymbol, userSlotMoney, gameMoney) => {
-      console.log(resultSymbol);
       console.group('Slot의 결과!');
       console.log('사용자의 게임 머니는 --> ', userSlotMoney);
       console.log('사용자가 배팅한 머니는 --> ', gameMoney);
