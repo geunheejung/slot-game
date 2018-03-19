@@ -1,9 +1,3 @@
-
-// 1등 : 3개의 릴에 모두 별모양이 나온 경우 배팅금액의 4배를 돌려받음
-// 2등 : 3개의 릴에 모두 벨모양이 나온 경우 배팅금액의 3배를 돌려받음
-// 3등 : 3개의 릴에 모두 체리모양이 나온 경우 배팅금액의 2배를 돌려받음,
-//   4등 : 3개의 릴 중 하나에 별이 나온 경우 동일하게 나온 경우 배팅금액을 돌려받음
-
 const slotGame = (() => {
   let userSlotMoney = 1000;
   let gameMoney;
@@ -18,15 +12,16 @@ const slotGame = (() => {
     resultSymbol = resultSymbol.slice(removePoint);
   };
 
-  const slotSymbol = (symbol) => {
-    if (!(Array.isArray(symbol))) throw 'symbol List는 배열 형태로만 셋팅할 수 있습니다.';
+  const slotSymbol = (symbol = []) => {
+    if (!symbol.length) throw '심볼은 최소 6가지로 채워주세요!';
     let symbolList = [];
 
     const setRandomSymbol = () => {
       let randomCount = 0,
-        i = 0,
-        MAX = 3,
-        tmp = [];
+          i = 0,
+          MAX = 3,
+          tmp = [];
+
       for (i; i < MAX ; i++) {
         randomCount = Math.floor(Math.random() * symbolList.length);
         tmp.push(symbolList[randomCount]);
@@ -39,61 +34,29 @@ const slotGame = (() => {
   };
 
   const changeGameMoney = (() => {
-    const filterSlot = (pattern = [], slots = [], matchedCb) => {
-      for (let i = 0; i < pattern.length; i++) {
-        let cur;
-        let resultSlot = [];
-        for (let j = 0; j < slots.length; j++) {
-          cur = pattern[i][j];
-          if (cur === slots[j]) resultSlot.push(cur);
-          if (resultSlot.length === 3) {
-            return matchedCb(resultSlot, i);
-          }
+    const getUserLank = () => {
+      const lankSlotPattern = [
+        ['별', '별', '별'], // 1
+        ['종', '종', '종'], // 2
+        ['체리', '체리', '체리'], // 3 -- 나머지 4
+      ];
+
+      let i, j;
+      for (i = 0; i < lankSlotPattern.length; i++) {
+        let current, tmp = [];
+        for (j = 0; j < 3; j++) {
+          current = lankSlotPattern[i][j];
+          if (current === resultSymbol[j]) tmp.push(current);
+          else if (resultSymbol[j] === '별') return 3;
+          if (tmp.length === 3) return i;
         }
       }
-    };
-
-    const checkAnswerSlot = () => {
-      const slotPattern = [
-        ['7', '7', '7'],
-        ['7', '7', '6'],
-        ['7', '6', '7'],
-        ['7', 'ㅁ', '7'],
-        ['7', '*', '7'],
-        ['#', 'M', '#'],
-        ['#', '#', '#']
-      ];
-      const getMatchSlotPattern = function(resultSlot, matchIndex) {
-        return resultSlot;
-      };
-      let filterSlotSymbol = filterSlot(slotPattern, resultSymbol, getMatchSlotPattern);
-      return filterSlotSymbol;
-    };
-
-    const getUserLank = () => {
-      const filterSlotSymbol = checkAnswerSlot();
-
-      if (!filterSlotSymbol) {
-        render();
-        throw '순위권에 없습니다!';
-      }
-
-      const lankSlotPattern = [
-        ['별', '별', '별'],
-        ['종', '종', '종'],
-        ['체리', '체리', '체리'],
-        ['7', 'ㅁ', '7'],
-        ['#', '7', '#']
-      ];
-      const getUserLank = (resultSlot, matchIndex) => matchIndex;
-      const userLank = filterSlot(lankSlotPattern, filterSlotSymbol, getUserLank);
-      return userLank;
     };
 
     return () => {
       const userLank = getUserLank();
 
-      switch (userLank) {
+      switch (userLank + 1) {
         case 1:
           userSlotMoney += gameMoney * 4;
           break;
@@ -103,7 +66,7 @@ const slotGame = (() => {
         case 3:
           userSlotMoney += gameMoney * 2;
           break;
-        case 4 || 5:
+        case 4:
           userSlotMoney += gameMoney * 1;
           break;
       }
@@ -113,7 +76,6 @@ const slotGame = (() => {
   })();
 
   const setSlotSymbol = () => {
-
     const symbolList = ['별', '종', '체리', '초밥', '샵', '바나나'];
     resultSymbol = slotSymbol(symbolList);
     changeGameMoney();
