@@ -7,5 +7,9 @@
 <body>
 <button id="test-btn">Game Start</button>
 <script src="./script/slotGame.js"></script>
+<script>
+  slotGame.setRenderer(con);
+  document.getElementById('test-btn').onclick = slotGame.start;
+</script>
 </body>
 </html>
