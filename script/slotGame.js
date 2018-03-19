@@ -61,7 +61,8 @@ var game = (function () {
       };
 
       resultArr = filterSlot(slotPattern, resultSymbol, getMatchSlotPattern);
-      userLank = filterSlot(slotPattern, resultSymbol, getUserLank);
+      // console.log('resultArr :', resultArr);
+      userLank = filterSlot(lankSlotPattern, resultArr, getUserLank);
 
       switch (userLank) {
         case 0:
@@ -95,7 +96,7 @@ var game = (function () {
     var randomSlotIndex;
     var i, j, symbolLen = testSymbol.length;
 
-    for (i = 0; i < slotCount; i++) {
+    for (i = 0; i < symbolLen; i++) {
       for (j = 0; j < slotWheelCount; j++) {
         randomSlotIndex = Math.floor(Math.random() * symbolLen);
       }
@@ -119,7 +120,7 @@ var game = (function () {
       bettingMoney = prompt('판돈을 걸어 주세요!');
 
       if (bettingMoney > userSlotMoney) {
-        console.log('현재 보유 머니 ( ' + userSlotMoney + ' ) 보다 판돈 ( ' + gameMoney + ' ) 이 큽니다.');
+        console.log('현재 보유 머니 ( ' + userSlotMoney + ' ) 보다 판돈 ( ' + bettingMoney + ' ) 이 큽니다.');
         return; 
       }
       userWheelCount = prompt('몇번 돌리실건가요?');                                     
