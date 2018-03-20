@@ -12,27 +12,6 @@ const slotGame = (() => {
     resultSymbol = resultSymbol.slice(removePoint);
   };
 
-  const slotSymbol = (symbol = []) => {
-    if (!symbol.length) throw '심볼은 최소 6가지로 채워주세요!';
-    let symbolList = [];
-
-    const setRandomSymbol = () => {
-      let randomCount = 0,
-          i = 0,
-          MAX = 3,
-          tmp = [];
-
-      for (i; i < MAX ; i++) {
-        randomCount = Math.floor(Math.random() * symbolList.length);
-        tmp.push(symbolList[randomCount]);
-        if (tmp.length === MAX) return tmp;
-      }
-    };
-
-    symbolList = symbol;
-    return setRandomSymbol();
-  };
-
   const changeGameMoney = (() => {
     const getUserLank = () => {
       const lankSlotPattern = [
@@ -71,9 +50,26 @@ const slotGame = (() => {
     }
   })();
 
-  const setSlotSymbol = () => {
+  const slotSymbol = () => {
     const symbolList = ['별', '종', '체리', '초밥', '샵', '바나나'];
-    resultSymbol = slotSymbol(symbolList);
+    const setRandomSymbol = () => {
+      let randomCount = 0,
+        i = 0,
+        MAX = 3,
+        tmp = [];
+
+      for (i; i < MAX ; i++) {
+        randomCount = Math.floor(Math.random() * symbolList.length);
+        tmp.push(symbolList[randomCount]);
+        if (tmp.length === MAX) return tmp;
+      }
+    };
+
+    return setRandomSymbol();
+  };
+
+  const setSlotSymbol = () => {
+    resultSymbol = slotSymbol();
     userSlotMoney += changeGameMoney();
     render();
     clear();
